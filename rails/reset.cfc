@@ -4,6 +4,6 @@ component {
 
     /** Delegate to the setup task so server checks and database paths have one owner. */
     function run() {
-        taskService.runTask(getDirectoryFromPath(getCurrentTemplatePath()) & "task.cfc", "reset");
+        print.line(taskService.runTask(getDirectoryFromPath(getCurrentTemplatePath()) & "task.cfc", "reset"));
     }
 }

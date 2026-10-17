@@ -61,7 +61,7 @@ component {
                 fileDelete(database & suffix);
             }
         }
-        run();
+        this.run();
     }
 
     /** Never migrate or reset a database while its registered web server is running. */

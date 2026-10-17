@@ -1,0 +1,80 @@
+<a href="<%= url('/tickets') %>">All tickets</a>
+<div class="page-heading">
+    <div>
+        <p class="kicker">Ticket #<%= @ticket.id %>
+        </p>
+        <h1>
+            <%= h(@ticket.title) %>
+        </h1>
+        <p>
+            <%= h(@ticket.customer.company) %> · Created <%= timestamp(@ticket.created_at) %>
+        </p>
+    </div>
+    <a class="button" href="<%= url('/tickets/' + @ticket.id.to_s + '/edit') %>">Edit ticket</a>
+</div>
+<div class="detail-grid">
+    <div>
+        <section class="panel">
+            <h2>Request details</h2>
+            <p class="prose">
+                <%= h(@ticket.description) %>
+            </p>
+        </section>
+        <section class="panel">
+            <h2>Conversation</h2>
+            <% @ticket.comments.includes(:agent).each do |comment| %>
+                <article class="comment">
+                    <div>
+                        <strong>
+                            <%= h(comment.agent.name) %>
+                        </strong>
+                        <time>
+                            <%= timestamp(comment.created_at) %>
+                        </time>
+                    </div>
+                    <p class="prose">
+                        <%= h(comment.body) %>
+                    </p>
+                </article>
+            <% end %>
+            <% if @ticket.comments.empty? %>
+                <p>No comments yet. Add the first update below.</p>
+            <% end %>
+            <%= partial('errors') %>
+            <form method="post" action="<%= url('/tickets/' + @ticket.id.to_s + '/comments') %>">
+                <%= csrf_field %>
+                <label>Add a comment as <%= h(current_agent.name) %><textarea name="comment[body]" rows="4" required maxlength="5000"><%= h(@comment_body) %></textarea></label>
+                <button type="submit">Add comment</button>
+            </form>
+        </section>
+    </div>
+    <aside class="panel">
+        <h2>At a glance</h2>
+        <dl>
+            <dt>Status</dt>
+            <dd>
+                <span class="badge <%= @ticket.status %>">
+                    <%= label(@ticket.status) %>
+                </span>
+            </dd>
+            <dt>Priority</dt>
+            <dd>
+                <%= label(@ticket.priority) %>
+            </dd>
+            <dt>Assigned to</dt>
+            <dd>
+                <%= h(@ticket.assignee&.name || 'Unassigned') %>
+            </dd>
+            <dt>Customer</dt>
+            <dd>
+                <a href="<%= url('/customers/' + @ticket.customer_id.to_s) %>">
+                    <%= h(@ticket.customer.name) %>
+                </a>
+            </dd>
+            <dt>Last updated</dt>
+            <dd>
+                <%= timestamp(@ticket.updated_at) %>
+            </dd>
+        </dl>
+    </aside>
+</div>

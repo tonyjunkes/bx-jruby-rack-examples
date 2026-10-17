@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Fieldwork Service Desk · Rails</title>
+        <link rel="stylesheet" href="<%= url('/assets/desk.css') %>">
+    </head>
+    <body>
+        <a class="skip-link" href="#main">Skip to content</a>
+        <header class="topbar">
+            <a class="brand" href="<%= url('/') %>">
+                <span class="brand-mark" aria-hidden="true">F</span> Fieldwork <span>Service Desk</span>
+            </a>
+            <span class="framework">Rails example</span>
+        </header>
+        <div class="workspace">
+            <nav class="sidebar" aria-label="Main navigation">
+                <a href="<%= url('/') %>">Overview</a>
+                <a href="<%= url('/tickets') %>">Tickets</a>
+                <a href="<%= url('/customers') %>">Customers</a>
+                <a href="/">BoxLang host</a>
+                <div class="demo">
+                    <p>Demo identity</p>
+                    <form method="post" action="<%= url('/identity') %>">
+                        <%= csrf_field %>
+                        <label for="agent">Acting as<select id="agent" name="agent_id">
+                                <% agents.each do |agent| %>
+                                    <option value="<%= agent.id %>" <%= selected(current_agent.id, agent.id) %>>
+                                        <%= h(agent.name) %>
+                                    </option>
+                                <% end %>
+                            </select>
+                        </label>
+                        <button type="submit">Switch agent</button>
+                    </form>
+                    <small>Sample data. No sign-in required.</small>
+                </div>
+            </nav>
+            <main id="main">
+                <% if session[:notice] %>
+                    <p class="notice" role="status">
+                        <%= h(session.delete(:notice)) %>
+                    </p>
+                <% end %>
+                <%= yield %>
+            </main>
+        </div>
+        <footer>Fieldwork Service Desk · A BoxLang + JRuby example · Rails</footer>
+    </body>
+</html>

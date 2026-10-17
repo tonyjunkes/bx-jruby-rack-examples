@@ -1,0 +1,60 @@
+<div class="page-heading">
+    <div>
+        <h1>Tickets</h1>
+        <p>Find the request. Take the next step.</p>
+    </div>
+    <a class="button" href="<%= url('/tickets/new') %>">New ticket</a>
+</div>
+<form class="filters panel" method="get" action="<%= url('/tickets') %>">
+    <label>Search<input type="search" name="q" value="<%= h(params['q']) %>" placeholder="Title or description" maxlength="200">
+    </label>
+    <label>Status<select name="status">
+            <option value="">All statuses</option>
+            <option value="active" <%= selected(params['status'], 'active') %>>Open work</option>
+            <% Ticket::STATUSES.each do |value| %>
+                <option value="<%= value %>" <%= selected(params['status'], value) %>>
+                    <%= label(value) %>
+                </option>
+            <% end %>
+        </select>
+    </label>
+    <label>Priority<select name="priority">
+            <option value="">All priorities</option>
+            <% Ticket::PRIORITIES.each do |value| %>
+                <option value="<%= value %>" <%= selected(params['priority'], value) %>>
+                    <%= label(value) %>
+                </option>
+            <% end %>
+        </select>
+    </label>
+    <label>Assignee<select name="assignee">
+            <option value="">Everyone</option>
+            <option value="unassigned" <%= selected(params['assignee'], 'unassigned') %>>Unassigned</option>
+            <% agents.each do |agent| %>
+                <option value="<%= agent.id %>" <%= selected(params['assignee'], agent.id) %>>
+                    <%= h(agent.name) %>
+                </option>
+            <% end %>
+        </select>
+    </label>
+    <button type="submit">Apply filters</button>
+    <a href="<%= url('/tickets') %>">Clear</a>
+</form>
+<section class="panel">
+    <div class="section-heading">
+        <h2>Request queue</h2>
+        <span>
+            <%= @total %> tickets</span>
+    </div>
+    <%= partial('ticket_table') %>
+    <nav class="pagination" aria-label="Ticket pages">
+        <% if @page > 1 %>
+            <a href="<%= h(page_url(@page - 1)) %>">Previous</a>
+        <% end %>
+        <span>Page <%= @page %> of <%= @pages %>
+        </span>
+        <% if @page < @pages %>
+            <a href="<%= h(page_url(@page + 1)) %>">Next</a>
+        <% end %>
+    </nav>
+</section>

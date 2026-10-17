@@ -1,0 +1,41 @@
+<div class="page-heading">
+    <div>
+        <h1>Customers</h1>
+        <p>The people and teams behind the requests.</p>
+    </div>
+    <a class="button" href="<%= url('/customers/new') %>">New customer</a>
+</div>
+<section class="panel">
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Company</th>
+                    <th scope="col">Contact</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Tickets</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% Customer.includes(:tickets).order(:company).each do |customer| %>
+                    <tr>
+                        <td>
+                            <a href="<%= url('/customers/' + customer.id.to_s) %>">
+                                <%= h(customer.company) %>
+                            </a>
+                        </td>
+                        <td>
+                            <%= h(customer.name) %>
+                        </td>
+                        <td>
+                            <%= h(customer.email) %>
+                        </td>
+                        <td>
+                            <%= customer.tickets.size %>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+</section>

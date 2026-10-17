@@ -1,0 +1,16 @@
+<a href="<%= url('/customers') %>">All customers</a>
+<div class="page-heading">
+    <div>
+        <h1>
+            <%= h(@customer.company) %>
+        </h1>
+        <p>
+            <%= h(@customer.name) %> · <%= h(@customer.email) %>
+        </p>
+    </div>
+    <a class="button" href="<%= url('/customers/' + @customer.id.to_s + '/edit') %>">Edit customer</a>
+</div>
+<section class="panel">
+    <h2>Ticket history</h2>
+    <%= partial('ticket_table') %>
+</section>

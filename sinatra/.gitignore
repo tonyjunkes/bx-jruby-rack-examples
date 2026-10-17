@@ -1,0 +1,11 @@
+/modules/
+/bundles/
+/.boxlang/
+/config/
+/storage/
+/.engine/
+/app/.bundle/
+/app/log/
+/app/tmp/
+/app/db/schema.rb
+*.log

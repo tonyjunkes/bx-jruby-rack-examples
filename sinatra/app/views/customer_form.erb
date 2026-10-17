@@ -1,0 +1,24 @@
+<div class="page-heading">
+    <div>
+        <a href="<%= url('/customers') %>">Customers</a>
+        <h1>
+            <%= @customer.persisted? ? 'Edit customer' : 'New customer' %>
+        </h1>
+    </div>
+</div>
+<section class="panel form-panel">
+    <%= partial('errors') %>
+    <form method="post" action="<%= url(@customer.persisted? ? '/customers/' + @customer.id.to_s : '/customers') %>">
+        <%= csrf_field %>
+        <label>Contact name<input name="customer[name]" value="<%= h(@customer.name) %>" required maxlength="200">
+        </label>
+        <label>Company<input name="customer[company]" value="<%= h(@customer.company) %>" required maxlength="200">
+        </label>
+        <label>Email<input type="email" name="customer[email]" value="<%= h(@customer.email) %>" required maxlength="200">
+        </label>
+        <div class="actions">
+            <button type="submit">Save customer</button>
+            <a href="<%= url('/customers') %>">Cancel</a>
+        </div>
+    </form>
+</section>

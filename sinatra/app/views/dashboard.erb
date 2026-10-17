@@ -1,0 +1,65 @@
+<div class="page-heading">
+    <div>
+        <p class="kicker">Your team's workspace</p>
+        <h1>Good work starts here.</h1>
+        <p>Keep customer requests moving, one clear next step at a time.</p>
+    </div>
+    <a class="button" href="<%= url('/tickets/new') %>">New ticket</a>
+</div>
+<section class="metrics" aria-label="Work queue summary">
+    <div>
+        <span>Open work</span>
+        <strong>
+            <%= Ticket.where.not(status: 'resolved').count %>
+        </strong>
+    </div>
+    <div>
+        <span>Unassigned</span>
+        <strong>
+            <%= Ticket.where(assignee_id: nil).where.not(status: 'resolved').count %>
+        </strong>
+    </div>
+    <div>
+        <span>Resolved</span>
+        <strong>
+            <%= Ticket.where(status: 'resolved').count %>
+        </strong>
+    </div>
+</section>
+<div class="dashboard-grid">
+    <section class="panel">
+        <h2>Work by priority</h2>
+        <p>Tickets still needing a response or resolution.</p>
+        <% Ticket::PRIORITIES.reverse.each do |priority| %>
+            <div class="stat-row">
+                <a href="<%= h(url('/tickets?status=active&priority=' + priority)) %>">
+                    <%= label(priority) %>
+                </a>
+                <strong>
+                    <%= Ticket.where(priority: priority).where.not(status: 'resolved').count %>
+                </strong>
+            </div>
+        <% end %>
+    </section>
+    <section class="panel">
+        <h2>Team workload</h2>
+        <p>Open and in-progress tickets assigned to each agent.</p>
+        <% agents.each do |agent| %>
+            <div class="stat-row">
+                <a href="<%= h(url('/tickets?status=active&assignee=' + agent.id.to_s)) %>">
+                    <%= h(agent.name) %>
+                </a>
+                <strong>
+                    <%= agent.tickets.where.not(status: 'resolved').count %>
+                </strong>
+            </div>
+        <% end %>
+    </section>
+</div>
+<section class="panel">
+    <div class="section-heading">
+        <h2>Recently updated</h2>
+        <a href="<%= url('/tickets') %>">View all tickets</a>
+    </div>
+    <%= partial('ticket_table') %>
+</section>

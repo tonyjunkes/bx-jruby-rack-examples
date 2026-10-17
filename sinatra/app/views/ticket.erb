@@ -16,9 +16,7 @@
     <div>
         <section class="panel">
             <h2>Request details</h2>
-            <p class="prose">
-                <%= h(@ticket.description) %>
-            </p>
+            <p class="prose"><%= h(@ticket.description) %></p>
         </section>
         <section class="panel">
             <h2>Conversation</h2>
@@ -32,9 +30,7 @@
                             <%= timestamp(comment.created_at) %>
                         </time>
                     </div>
-                    <p class="prose">
-                        <%= h(comment.body) %>
-                    </p>
+                    <p class="prose"><%= h(comment.body) %></p>
                 </article>
             <% end %>
             <% if @ticket.comments.empty? %>

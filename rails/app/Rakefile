@@ -1,0 +1,11 @@
+require_relative 'config/application'
+Rails.application.load_tasks
+
+namespace :demo do
+    desc 'Prepare a new demo or migrate an existing one without replacing data'
+    task :prepare do
+        new_database = !File.exist?(ENV.fetch('DESK_DATABASE'))
+        Rake::Task['db:migrate'].invoke
+        Rake::Task['db:seed'].invoke if new_database
+    end
+end

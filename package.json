@@ -1,0 +1,12 @@
+{
+    "name": "bx-jruby-rack-examples-tests",
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "test": "npm run test:cleanup && node scripts/acceptance.mjs",
+        "test:cleanup": "node --test scripts/cleanup.test.mjs"
+    },
+    "devDependencies": {
+        "playwright": "1.64.1"
+    }
+}

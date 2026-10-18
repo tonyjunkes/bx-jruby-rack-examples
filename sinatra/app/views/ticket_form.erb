@@ -1,0 +1,57 @@
+<div class="page-heading">
+    <div>
+        <a href="<%= url('/tickets') %>">Tickets</a>
+        <h1>
+            <%= @ticket.persisted? ? 'Edit ticket' : 'New ticket' %>
+        </h1>
+    </div>
+</div>
+<section class="panel form-panel">
+    <%= partial('errors') %>
+    <form method="post" action="<%= url(@ticket.persisted? ? '/tickets/' + @ticket.id.to_s : '/tickets') %>">
+        <%= csrf_field %>
+        <label>Title<input name="ticket[title]" value="<%= h(@ticket.title) %>" required maxlength="160">
+        </label>
+        <label>Customer<select name="ticket[customer_id]" required>
+                <option value="">Choose a customer</option>
+                <% Customer.order(:company).each do |customer| %>
+                    <option value="<%= customer.id %>" <%= selected(@ticket.customer_id, customer.id) %>>
+                        <%= h(customer.company + ' — ' + customer.name) %>
+                    </option>
+                <% end %>
+            </select>
+        </label>
+        <label>Description<textarea name="ticket[description]" rows="6" required maxlength="10000"><%= h(@ticket.description) %></textarea></label>
+        <div class="form-grid">
+            <label>Priority<select name="ticket[priority]">
+                    <% Ticket::PRIORITIES.each do |value| %>
+                        <option <%= selected(@ticket.priority, value) %> value="<%= value %>">
+                            <%= label(value) %>
+                        </option>
+                    <% end %>
+                </select>
+            </label>
+            <label>Status<select name="ticket[status]">
+                    <% Ticket::STATUSES.each do |value| %>
+                        <option <%= selected(@ticket.status, value) %> value="<%= value %>">
+                            <%= label(value) %>
+                        </option>
+                    <% end %>
+                </select>
+            </label>
+            <label>Assignee<select name="ticket[assignee_id]">
+                    <option value="">Unassigned</option>
+                    <% agents.each do |agent| %>
+                        <option value="<%= agent.id %>" <%= selected(@ticket.assignee_id, agent.id) %>>
+                            <%= h(agent.name) %>
+                        </option>
+                    <% end %>
+                </select>
+            </label>
+        </div>
+        <div class="actions">
+            <button type="submit">Save ticket</button>
+            <a href="<%= url(@ticket.persisted? ? '/tickets/' + @ticket.id.to_s : '/tickets') %>">Cancel</a>
+        </div>
+    </form>
+</section>

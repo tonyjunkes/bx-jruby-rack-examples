@@ -1,0 +1,12 @@
+<% if @errors && @errors.any? %>
+    <div class="errors" role="alert">
+        <h2>Please check these details</h2>
+        <ul>
+            <% @errors.each do |error| %>
+                <li>
+                    <%= h(error) %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+<% end %>

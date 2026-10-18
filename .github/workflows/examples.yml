@@ -1,0 +1,67 @@
+name: Runnable examples
+
+on:
+    push:
+        branches: [main]
+    pull_request:
+    workflow_dispatch:
+
+permissions:
+    contents: read
+
+jobs:
+    acceptance:
+        name: CommandBox / ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        timeout-minutes: 45
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [ubuntu-24.04, windows-latest]
+        defaults:
+            run:
+                shell: bash
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  persist-credentials: false
+            - uses: actions/setup-java@v6
+              with:
+                  distribution: temurin
+                  java-version: '21'
+            - uses: actions/setup-node@v6
+              with:
+                  node-version: '22'
+                  cache: npm
+            - name: Install CommandBox 6.3.5
+              run: |
+                  commandbox_dir="$(mktemp -d)"
+                  platform=bin
+                  binary=box
+                  if [[ "$RUNNER_OS" == Windows ]]; then
+                      platform=win
+                      binary=box.exe
+                  fi
+                  curl --fail --location --retry 3 --output "$commandbox_dir/commandbox.zip" \
+                      "https://downloads.ortussolutions.com/ortussolutions/commandbox/6.3.5/commandbox-$platform-6.3.5.zip"
+                  unzip -q "$commandbox_dir/commandbox.zip" -d "$commandbox_dir"
+                  chmod +x "$commandbox_dir/$binary"
+                  "$commandbox_dir/$binary" version
+                  binary_path="$commandbox_dir/$binary"
+                  if [[ "$RUNNER_OS" == Windows ]]; then
+                      binary_path="$(cygpath -w "$binary_path")"
+                  fi
+                  echo "BOX_BINARY=$binary_path" >> "$GITHUB_ENV"
+            - run: npm ci
+            - run: npx playwright install --with-deps chromium
+            - name: Install, run and exercise all three standalone apps
+              run: npm test
+            - name: Retain diagnostics and browser screenshots
+              if: always()
+              uses: actions/upload-artifact@v7
+              with:
+                  name: examples-${{ matrix.os }}
+                  path: |
+                      output/**/*.log
+                      output/**/*.png
+                  retention-days: 7

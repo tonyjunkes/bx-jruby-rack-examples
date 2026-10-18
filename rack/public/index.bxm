@@ -1,0 +1,18 @@
+<bx:script>
+available = false;
+state = "Unavailable";
+completed = 0;
+try {
+    snapshot = jrubyRackGet("fieldwork-rack").status();
+    state = snapshot.state;
+    completed = snapshot.requests;
+    available = true;
+} catch (any failure) {
+    // Diagnostics intentionally expose only curated fields, never configuration or causes.
+}
+</bx:script>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Fieldwork · BoxLang host</title><link rel="stylesheet" href="/ruby/assets/desk.css"></head><body>
+<header class="topbar"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">F</span> Fieldwork <span>BoxLang host</span></a><span class="framework">rack example</span></header>
+<main style="max-width: 1000px; margin: auto"><div class="page-heading"><div><p class="kicker">BoxLang + JRuby</p><h1>A familiar service desk. A different host.</h1><p>This page runs in BoxLang. The service desk runs in rack through the Rack gateway, inside the same JVM.</p></div></div>
+<p><a class="button" href="/ruby/">Open service desk</a></p><section class="panel"><h2>Runtime status</h2><bx:output><dl><dt>Framework</dt><dd>rack</dd><dt>Mount</dt><dd>/ruby</dd><dt>State</dt><dd>#encodeForHTML(state)#</dd><dt>Completed requests</dt><dd>#completed#</dd><dt>Workers</dt><dd>1</dd></dl></bx:output><bx:if !available><p>Check the CommandBox server logs and rerun setup with the server stopped.</p></bx:if></section>
+<section class="panel"><h2>Try the workflow</h2><p>Choose a demo agent, create a customer and ticket, assign the ticket, add a comment, then resolve it. Search and filter the queue to find your work.</p><p>Changes stay in a local SQLite file. Stop the server and run <code>box task run reset</code> to restore the sample data.</p><p>Demo identities are a learning aid. This example is configured for local development.</p></section></main></body></html>

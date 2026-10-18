@@ -1,0 +1,9 @@
+source 'https://rubygems.org'
+gem 'rack', '3.2.7'
+gem 'activerecord', '7.2.4'
+gem 'activerecord-jdbcsqlite3-adapter', '72.1', platforms: :jruby
+gem 'jdbc-sqlite3', '3.46.1.1', platforms: :jruby
+gem 'rake', '13.4.2'
+gem 'tzinfo-data', '1.2026.5'
+gem 'rack-session', '2.1.2'
+gem 'rack-protection', '4.2.1'

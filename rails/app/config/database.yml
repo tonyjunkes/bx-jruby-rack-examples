@@ -1,0 +1,12 @@
+default: &default
+    adapter: sqlite3
+    database: <%= ENV.fetch('DESK_DATABASE').to_json %>
+    pool: 5
+    timeout: 5000
+
+development:
+    <<: *default
+test:
+    <<: *default
+production:
+    <<: *default

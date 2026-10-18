@@ -1,0 +1,45 @@
+<% if @tickets.empty? %>
+    <p class="empty">No tickets found. Try another filter or create a new ticket.</p>
+<% else %>
+    <div class="table-scroll">
+        <table>
+            <thead>
+                <tr>
+                    <th scope="col">Ticket</th>
+                    <th scope="col">Customer</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Priority</th>
+                    <th scope="col">Assignee</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @tickets.each do |ticket| %>
+                    <tr>
+                        <td>
+                            <a class="ticket-link" href="<%= url('/tickets/' + ticket.id.to_s) %>">
+                                <span class="ticket-number">#<%= ticket.id %>
+                                </span> <%= h(ticket.title) %>
+                            </a>
+                        </td>
+                        <td>
+                            <%= h(ticket.customer.company) %>
+                        </td>
+                        <td>
+                            <span class="badge <%= ticket.status %>">
+                                <%= label(ticket.status) %>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="priority <%= ticket.priority %>">
+                                <%= label(ticket.priority) %>
+                            </span>
+                        </td>
+                        <td>
+                            <%= h(ticket.assignee&.name || 'Unassigned') %>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+    </div>
+<% end %>

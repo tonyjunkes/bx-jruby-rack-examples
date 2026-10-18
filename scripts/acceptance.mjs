@@ -4,6 +4,7 @@ import path from 'node:path';
 import net from 'node:net';
 import { spawn } from 'node:child_process';
 import { chromium } from 'playwright';
+import { cleanupServers } from './cleanup.mjs';
 
 const root = path.resolve(import.meta.dirname, '..');
 const output = path.join(root, 'output', 'acceptance-' + Date.now());
@@ -262,18 +263,9 @@ try {
         assert.equal(fs.readFileSync(path.join(app.folder, 'storage/session-secret'), 'utf8'), app.secret);
         console.log(app.framework + ': restart persistence, idempotent setup and reset passed');
     }
-    console.log('All acceptance checks passed. Artifacts: ' + output);
 } finally {
-    for (const app of apps) {
-        try {
-            await runBox(app, ['server', 'log']);
-        } catch (error) {
-            console.error('Could not collect server log: ' + error.message);
-        }
-        try {
-            await runBox(app, ['server', 'stop']);
-        } catch (error) {
-            console.error('Server cleanup failed: ' + error.message);
-        }
-    }
+    await cleanupServers(apps, runBox);
+}
+if (!process.exitCode) {
+    console.log('All acceptance checks passed. Artifacts: ' + output);
 }

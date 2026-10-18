@@ -114,8 +114,10 @@ The acceptance runner copies all three examples into ignored paths containing
 spaces, installs released modules, runs their documented setup, and tests actual
 CommandBox HTTP servers together. It checks persistence, reset, source isolation,
 CSRF, escaping, cookie isolation and application workflows. Browser checks capture
-desktop/mobile screenshots under `output/`. The runner stops servers in `finally`
-blocks and retains command and server logs there on failure. CI repeats this on
-Windows and Linux.
+desktop/mobile screenshots under `output/`. The runner attempts every server's
+shutdown in `finally` and fails the run if any shutdown fails, while retaining
+the original test error. Log collection is best effort. CI repeats this on Windows
+and Linux. Run `npm run test:cleanup` for the focused cleanup failure-path checks
+without installing modules or starting servers; `npm test` includes these checks.
 
 MIT licensed. See [LICENSE](LICENSE).
